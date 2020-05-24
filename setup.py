@@ -25,7 +25,7 @@ DISTNAME = 'csvObject'
 MAINTAINER = 'Samuel Baker'
 MAINTAINER_EMAIL = 'samuelbaker.researcher@gmail.com'
 LICENSE = 'MIT'
-DOWNLOAD_URL = "https://github.com/sbaker-dev/Shape_object"
+DOWNLOAD_URL = "https://github.com/sbaker-dev/csvObject"
 VERSION = "0.01.0"
 PYTHON_REQUIRES = ">=3.6"
 
