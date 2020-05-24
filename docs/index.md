@@ -1,4 +1,4 @@
-![logo]
+![logo](https://github.com/sbaker-dev/csvObject/tree/master/images/logo.png)
 
 # csvObject
 
@@ -35,7 +35,7 @@ into an object with a few basic options without Numpy then this may be of intere
 
 csvObject is available as a package via Pypi so you can pip install by the following command
 
-```shell script
+```
 python -m pip install csvObject
 ```
 
