@@ -1,4 +1,5 @@
 import csv
+from distutils.util import strtobool
 
 
 class CsvObject:
@@ -71,9 +72,16 @@ class CsvObject:
             raw_data = [row for row in csv.reader(csv_file)]
 
         if file_headers:
-            return raw_data[0], raw_data[1:]
+            headers = []
+            for index, header in enumerate(raw_data[0]):
+                if header != "":
+                    headers.append(header)
+                else:
+                    headers.append(f"Untitled_{index + 1}")
+
+            return headers, raw_data[1:]
         else:
-            return ["Untitled_Variable" for _ in range(len(raw_data[0]))], raw_data
+            return [f"Untitled_{i + 1}" for i in range(len(raw_data[0]))], raw_data
 
     def _determine_column_types(self, column_types):
         """
@@ -86,14 +94,33 @@ class CsvObject:
         :rtype: list[type]
         """
         if isinstance(column_types, list):
+            # List based typing
             if len(column_types) != len(self.headers):
                 raise ValueError(f"You must provide as many column types as columns of data\nFound {len(column_types)}"
                                  f" but expected {len(self.headers)}")
             else:
-                return column_types
+                return_types = []
+                for col_type in column_types:
+                    if col_type != bool:
+                        return_types.append(col_type)
+                    else:
+                        # a Bool("FALSE") is True, so we need to handle bool's via a method call to distutils strtobool
+                        return_types.append(self._string_to_bool)
+                return return_types
 
         elif isinstance(column_types, type):
-            return [column_types for _ in range(self._column_length)]
+            # Uniform Typing of type column_types
+            if column_types == bool:
+                return [self._string_to_bool for _ in range(self._column_length)]
+            else:
+                return [column_types for _ in range(self._column_length)]
+
+        elif not column_types:
+            # None Typed operation
+            return column_types
+
+        else:
+            raise TypeError(f"Column_types takes a list[types], type or None. Yet {type(column_types)} was found")
 
     def _format_column(self, row_data):
         """
@@ -136,8 +163,8 @@ class CsvObject:
             try:
                 typed_row.append(entry_type(entry))
             except ValueError:
-                if (entry_type == int or entry == float) and self.missing_to_zero:
-                    typed_row.append(0)
+                if (entry_type == int or entry_type == float) and self.missing_to_zero:
+                    typed_row.append(entry_type(0))
                 else:
                     if [i + 1, index + 2, entry, entry_type] not in self.invalid_typed and self.print_warnings:
                         self.invalid_typed.append([i + 1, index + 2, entry, entry_type])
@@ -157,3 +184,10 @@ class CsvObject:
             return row_data, self._format_column(row_data)
         else:
             return self._raw_data, self._format_column(self._raw_data)
+
+    @staticmethod
+    def _string_to_bool(string_representation_of_bool):
+        """
+        Convert a string of False or True to a bool representation
+        """
+        return bool(strtobool(string_representation_of_bool))
