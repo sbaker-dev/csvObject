@@ -34,7 +34,7 @@ INSTALL_REQUIRES = [
 ]
 
 PACKAGES = [
-    "Shape_object",
+    "csvObject",
 ]
 
 CLASSIFIERS = [
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     import sys
 
     if sys.version_info[:2] < (3, 7):
-        raise RuntimeError("Shape_object requires python >= 3.7.")
+        raise RuntimeError("csvObject requires python >= 3.7.")
 
     setup(
         name=DISTNAME,
