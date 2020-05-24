@@ -54,4 +54,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
  
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[logo]: images/logo.png
+[logo]: images/logo_50.png

@@ -1,4 +1,4 @@
-![logo](https://github.com/sbaker-dev/csvObject/tree/master/images/logo.png)
+![logo](https://github.com/sbaker-dev/csvObject/tree/master/images/logo_50.png)
 
 # csvObject
 
