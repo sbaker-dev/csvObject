@@ -1,37 +1,57 @@
-## Welcome to GitHub Pages
+![logo]
 
-You can use the [editor on GitHub](https://github.com/sbaker-dev/csvObject/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+# csvObject
+Simple Objected based approach to using data from a csv
+All the source code can be found at the [csvObject git repository](https://github.com/sbaker-dev/csvObject)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+<!--Table OF CONTENTS -->
+## Table of Contents
+* [About the Project](#about-the-project)
+* [Getting Started](#getting-started)
+* [Usage](#usage)
+* [Contributions](#contributions)
+* [License](#license)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<!--ABOUT THE PROJECT -->
+## About The Project
+csvObject is just a simple object base approach to loading in a csv file and using the data. In more complex cases when
+doing actual data analysis or changing the structure of the file, using [pandas](https://github.com/pandas-dev/pandas)
+makes much more sense. But if all you want is to have a light weight way of extracting the data from the csv file parsed
+into an object with a few basic options without Numpy then this may be of interest.
 
-```markdown
-Syntax highlighted code block
+<!-- GETTING STARTED -->    
+## Getting Started 
+csvObject is available as a package via Pypi so you can pip install by the following command
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```shell script
+python -m pip install csvObject
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
-### Jekyll Themes
+<!-- USAGE -->
+## Usage
+The simplest use case is when the only argument to passed to the object is the path to the file. In this case the only
+thing this package is doing is creating an object that holds the filename, the headers, and the data in a row and column
+format from the csv module within python. CsvObject does have other options, detailed on the [docs page](
+https://sbaker-dev.github.io/csvObject/)
+```python
+from csvObject.csvObject import CsvObject
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/sbaker-dev/csvObject/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+csv_object = CsvObject("Example Data.csv")
+print(csv_object.row_data)
+```
 
-### Support or Contact
+<!-- CONTRIBUTIONS -->
+## Contributions
+Contributions are always welcome, if you want to make a contribution simply make a pull request based on your fork of
+the project
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+<!-- License -->
+## License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+ 
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[logo]: images/logo.png
