@@ -1,4 +1,3 @@
-Cat Name,Age,Breed,Owner Number
-Thistle,17.5,Taby,5550112
-Teasel,17.7,Ginger,5550154
-Squitten,10.2,Taby,5550432
+Cat Name,Age,Breed,Owner Number,
+Mitten,17.5,Taby,5550112,FALSE
+Squitten,10.2,Tortoiseshell,,TRUE
