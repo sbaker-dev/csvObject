@@ -1,4 +1,4 @@
-<img src="https://github.com/sbaker-dev/csvObject/blob/master/images/logo_50.png alt="logo>
+![logo](../images/logoDocs.png)
 
 # csvObject
 
