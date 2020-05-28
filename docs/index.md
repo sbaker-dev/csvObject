@@ -1,4 +1,4 @@
-![logo](../images/logoDocs.png)
+![logo](logoDocs.png)
 
 # csvObject
 
