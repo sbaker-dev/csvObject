@@ -1,5 +1,8 @@
 from csvObject.csvObject import CsvObject
 
+# Print the filename
+print(f"File name is: {CsvObject('Example Data.csv').file_name}\n")
+
 # Simple case, with no data typing
 print("# Simple Case #")
 csv_object = CsvObject("Example Data.csv")

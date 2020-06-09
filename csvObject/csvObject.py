@@ -39,6 +39,7 @@ class CsvObject:
         """
 
         self.headers, self._raw_data = self._extract_data(csv_path, file_headers, encoding)
+        self.file_name = self._extract_filename(csv_path)
         self._column_length = len(self._raw_data[0])
         self.column_types = self._determine_column_types(column_types)
 
@@ -191,3 +192,14 @@ class CsvObject:
         Convert a string of False or True to a bool representation
         """
         return bool(strtobool(string_representation_of_bool))
+
+    @staticmethod
+    def _extract_filename(csv_path):
+        """
+        This just uses slicing to extract the file name, maybe useful for users writing new data
+
+        :return: File name
+        :rtype: str
+        """
+        name = csv_path.replace("\\", "/")
+        return name.split("/")[len(name.split("/")) - 1].split(".")[0]
