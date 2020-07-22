@@ -138,7 +138,7 @@ class CsvObject:
         :return: A list of lists, where each list within the list is a list of entries found in a given column.
         :rtype: list[list]
         """
-        return [[row[i] for row in row_data] for i in range(self._column_length)]
+        return [[self._check_row(row, i) for row in row_data] for i in range(self._column_length)]
 
     def _type_data(self, row, index):
         """
@@ -185,6 +185,19 @@ class CsvObject:
             return row_data, self._format_column(row_data)
         else:
             return self._raw_data, self._format_column(self._raw_data)
+
+    @staticmethod
+    def _check_row(row, index):
+        """
+        Check if a row has any entries within it or else the system won't be able to index call it
+
+        :return: The content of the row if this row has any content otherwise return an empty string
+        :rtype: str
+        """
+        try:
+            return row[index]
+        except IndexError:
+            return ""
 
     @staticmethod
     def _string_to_bool(string_representation_of_bool):
