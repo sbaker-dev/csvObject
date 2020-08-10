@@ -7,7 +7,7 @@ class CsvObject:
     Simple Objected based approach to using data from a csv
     """
 
-    def __init__(self, csv_path, column_types=None, file_headers=True, encoding="utf-8-sig",
+    def __init__(self, csv_path, column_types=None, set_columns=False, file_headers=True, encoding="utf-8-sig",
                  missing_to_zero=False, print_warnings=True):
         """
         This class reads in the data from the path provided with the specified encoding standard. It then sets the
@@ -47,7 +47,7 @@ class CsvObject:
         self.print_warnings = print_warnings
         self.invalid_typed = []
 
-        self.row_data, self.column_data = self._set_data()
+        self.row_data, self.column_data = self._set_data(set_columns)
 
         if len(self.invalid_typed) > 0 and self.print_warnings:
             print(f"Warning: The following column-row-value-type where not correct so loaded as strings:\n"
