@@ -40,7 +40,7 @@ class CsvObject:
 
         self.headers, self._raw_data = self._extract_data(csv_path, file_headers, encoding)
         self.file_name = self._extract_filename(csv_path)
-        self._column_length = len(self._raw_data[0])
+        self.column_length = len(self._raw_data[0])
         self.column_types = self._determine_column_types(column_types)
 
         self.missing_to_zero = missing_to_zero
@@ -112,9 +112,9 @@ class CsvObject:
         elif isinstance(column_types, type):
             # Uniform Typing of type column_types
             if column_types == bool:
-                return [self._string_to_bool for _ in range(self._column_length)]
+                return [self._string_to_bool for _ in range(self.column_length)]
             else:
-                return [column_types for _ in range(self._column_length)]
+                return [column_types for _ in range(self.column_length)]
 
         elif not column_types:
             # None Typed operation
@@ -138,7 +138,7 @@ class CsvObject:
         :return: A list of lists, where each list within the list is a list of entries found in a given column.
         :rtype: list[list]
         """
-        return [[self._check_row(row, i) for row in row_data] for i in range(self._column_length)]
+        return [[row[i] for row in row_data] for i in range(self.column_length)]
 
     def _type_data(self, row, index):
         """
@@ -172,7 +172,26 @@ class CsvObject:
                     typed_row.append(entry)
         return typed_row
 
-    def _set_data(self):
+    def _check_row_length(self):
+        """
+        csv does not read in empty rows at the end of csv, so if we have 40 headers but only 26 columns for a given row
+        then we will end up not being able to index call. This sets all rows with length less than the column length to
+        be equal to it via blanks.
+
+        :return: A list of rows, where each row is equal to the length of the number of columns
+        :rtype: list[list]
+        """
+
+        row_data = []
+        for row in self._raw_data:
+            if len(row) < self.column_length:
+                row_data.append(row + ["" for _ in range(self.column_length - len(row))])
+            else:
+                row_data.append(row)
+
+        return row_data
+
+    def _set_data(self, set_columns):
         """
         Set the row and column data of the csv, with the entries typed if types where provided
 
@@ -181,23 +200,14 @@ class CsvObject:
         :rtype: tuple[list, list]
         """
         if self.column_types:
-            row_data = [self._type_data(row, index) for index, row in enumerate(self._raw_data)]
+            row_data = [self._type_data(row, index) for index, row in enumerate(self._check_row_length())]
+        else:
+            row_data = self._check_row_length()
+
+        if set_columns:
             return row_data, self._format_column(row_data)
         else:
-            return self._raw_data, self._format_column(self._raw_data)
-
-    @staticmethod
-    def _check_row(row, index):
-        """
-        Check if a row has any entries within it or else the system won't be able to index call it
-
-        :return: The content of the row if this row has any content otherwise return an empty string
-        :rtype: str
-        """
-        try:
-            return row[index]
-        except IndexError:
-            return ""
+            return row_data, None
 
     @staticmethod
     def _string_to_bool(string_representation_of_bool):
