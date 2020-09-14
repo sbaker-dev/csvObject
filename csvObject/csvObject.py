@@ -72,14 +72,12 @@ class CsvObject:
         with open(csv_path, "rt", encoding=encoding) as csv_file:
             raw_data = [row for row in csv.reader(csv_file)]
 
-        if file_headers:
-            headers = []
-            for index, header in enumerate(raw_data[0]):
-                if header != "":
-                    headers.append(header)
-                else:
-                    headers.append(f"Untitled_{index + 1}")
+        # If we have read in a .txt or prn file then we
+        if ".txt" in csv_path:
+            raw_data = [row[0].split() for row in raw_data if len(row) == 1]
 
+        if file_headers:
+            headers = [header if header != "" else f"Untitled_{index + 1}" for index, header in enumerate(raw_data[0])]
             return headers, raw_data[1:]
         else:
             return [f"Untitled_{i + 1}" for i in range(len(raw_data[0]))], raw_data
@@ -100,14 +98,7 @@ class CsvObject:
                 raise ValueError(f"You must provide as many column types as columns of data\nFound {len(column_types)}"
                                  f" but expected {len(self.headers)}")
             else:
-                return_types = []
-                for col_type in column_types:
-                    if col_type != bool:
-                        return_types.append(col_type)
-                    else:
-                        # a Bool("FALSE") is True, so we need to handle bool's via a method call to distutils strtobool
-                        return_types.append(self._string_to_bool)
-                return return_types
+                return [col_type if col_type != bool else self._string_to_bool(col_type) for col_type in column_types]
 
         elif isinstance(column_types, type):
             # Uniform Typing of type column_types
