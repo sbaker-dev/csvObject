@@ -1,5 +1,6 @@
-import csv
 from distutils.util import strtobool
+import csv
+import re
 
 
 class CsvObject:
@@ -75,6 +76,8 @@ class CsvObject:
         # If we have read in a .txt or prn file then we
         if ".txt" in csv_path:
             raw_data = [row[0].split() for row in raw_data if len(row) == 1]
+        elif ".tsv" in csv_path:
+            raw_data = [re.split(r"\t+", row[0]) for row in raw_data]
 
         if file_headers:
             headers = [header if header != "" else f"Untitled_{index + 1}" for index, header in enumerate(raw_data[0])]
