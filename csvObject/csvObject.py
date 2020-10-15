@@ -42,6 +42,7 @@ class CsvObject:
         self.headers, self._raw_data = self._extract_data(csv_path, file_headers, encoding)
         self.file_name = self._extract_filename(csv_path)
         self.column_length = len(self._raw_data[0])
+        self.row_length = len(self.headers)
         self.column_types = self._determine_column_types(column_types)
 
         self.missing_to_zero = missing_to_zero
@@ -73,10 +74,10 @@ class CsvObject:
         with open(csv_path, "rt", encoding=encoding) as csv_file:
             raw_data = [row for row in csv.reader(csv_file)]
 
-        # If we have read in a .txt or prn file then we
+        # If we have read in a .txt, .tsv or .uniq file then we delimit our rows
         if ".txt" in csv_path:
             raw_data = [row[0].split() for row in raw_data if len(row) == 1]
-        elif ".tsv" in csv_path:
+        elif ".tsv" or ".uniq" in csv_path:
             raw_data = [re.split(r"\t+", row[0]) for row in raw_data]
 
         if file_headers:
