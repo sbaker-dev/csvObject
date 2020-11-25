@@ -1,4 +1,5 @@
 from distutils.util import strtobool
+from pathlib import Path
 import csv
 import re
 
@@ -99,7 +100,7 @@ class CsvObject:
                 raise ValueError(f"You must provide as many column types as columns of data\nFound {len(column_types)}"
                                  f" but expected {len(self.headers)}")
             else:
-                return [col_type if col_type != bool else self._string_to_bool(col_type) for col_type in column_types]
+                return [col_type if col_type != bool else self._string_to_bool for col_type in column_types]
 
         elif isinstance(column_types, type):
             # Uniform Typing of type column_types
