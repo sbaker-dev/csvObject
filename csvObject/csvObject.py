@@ -39,8 +39,9 @@ class CsvObject:
         :type print_warnings: bool
         """
 
-        self.headers, self._raw_data = self._extract_data(csv_path, file_headers, encoding)
-        self.file_name = self._extract_filename(csv_path)
+        self.file_path = Path(csv_path)
+        self.headers, self._raw_data = self._extract_data(file_headers, encoding)
+        self.file_name = self.file_path.name
         self.column_length = len(self._raw_data[0])
         self.row_length = len(self.headers)
         self.column_types = self._determine_column_types(column_types)
@@ -55,13 +56,9 @@ class CsvObject:
             print(f"Warning: The following column-row-value-type where not correct so loaded as strings:\n"
                   f"{sorted(self.invalid_typed)}")
 
-    @staticmethod
-    def _extract_data(csv_path, file_headers, encoding):
+    def _extract_data(self, file_headers, encoding):
         """
         Returns a tuple of the the raw untyped row data minus the header, as well as the headers.
-
-        :param csv_path: path to the load file
-        :type csv_path: str
 
         :param file_headers: If the first row should be interpreted as a file header or not
         :type file_headers: bool
@@ -71,13 +68,13 @@ class CsvObject:
 
         :return: A tuple of raw untyped row data minus the header, as well as the headers
         """
-        with open(csv_path, "rt", encoding=encoding) as csv_file:
+        with open(self.file_path, "rt", encoding=encoding) as csv_file:
             raw_data = [row for row in csv.reader(csv_file)]
 
         # If we have read in a .txt, .tsv or .uniq file then we delimit our rows
-        if ".txt" in csv_path:
+        if self.file_path.suffix == ".txt":
             raw_data = [row[0].split() for row in raw_data if len(row) == 1]
-        elif ".tsv" or ".uniq" in csv_path:
+        elif (self.file_path.suffix == ".tsv") or (self.file_path.suffix == ".tsv"):
             raw_data = [re.split(r"\t+", row[0]) for row in raw_data]
 
         if file_headers:
@@ -210,14 +207,3 @@ class CsvObject:
         Convert a string of False or True to a bool representation
         """
         return bool(strtobool(string_representation_of_bool))
-
-    @staticmethod
-    def _extract_filename(csv_path):
-        """
-        This just uses slicing to extract the file name, maybe useful for users writing new data
-
-        :return: File name
-        :rtype: str
-        """
-        name = csv_path.replace("\\", "/")
-        return name.split("/")[len(name.split("/")) - 1].split(".")[0]
