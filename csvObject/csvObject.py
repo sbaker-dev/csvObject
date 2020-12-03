@@ -43,7 +43,7 @@ class CsvObject:
         self.file_path = Path(csv_path)
         self.headers, self._raw_data = self._extract_data(file_headers, encoding)
         self.file_name = self.file_path.name
-        self.column_length = len(self._raw_data[0])
+        self.column_length = len(self._raw_data)
         self.row_length = len(self.headers)
         self.column_types = self._determine_column_types(column_types)
 
