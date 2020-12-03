@@ -105,9 +105,9 @@ class CsvObject:
         elif isinstance(column_types, type):
             # Uniform Typing of type column_types
             if column_types == bool:
-                return [self._string_to_bool for _ in range(self.column_length)]
+                return [self._string_to_bool for _ in range(self.row_length)]
             else:
-                return [column_types for _ in range(self.column_length)]
+                return [column_types for _ in range(self.row_length)]
 
         elif not column_types:
             # None Typed operation
@@ -131,7 +131,7 @@ class CsvObject:
         :return: A list of lists, where each list within the list is a list of entries found in a given column.
         :rtype: list[list]
         """
-        return [[row[i] for row in row_data] for i in range(self.column_length)]
+        return [[row[i] for row in row_data] for i in range(self.row_length)]
 
     def _type_data(self, row, index):
         """
@@ -177,8 +177,8 @@ class CsvObject:
 
         row_data = []
         for row in self._raw_data:
-            if len(row) < self.column_length:
-                row_data.append(row + ["" for _ in range(self.column_length - len(row))])
+            if len(row) < self.row_length:
+                row_data.append(row + ["" for _ in range(self.row_length - len(row))])
             else:
                 row_data.append(row)
 

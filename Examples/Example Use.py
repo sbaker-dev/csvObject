@@ -33,10 +33,16 @@ print("")
 print("# List element Typing #")
 csv_object = CsvObject("Example Data.csv", column_types=[str, float, str, int, bool])
 print(csv_object.row_data)
+print("")
 
 csv_object = CsvObject("Example Data.csv", column_types=[str, float, str, float, bool], missing_to_zero=True)
 print(csv_object.row_data)
+print("")
 
 csv_object = CsvObject("Example Data.csv", column_types=[str, float, str, int, bool], print_warnings=False)
 print(csv_object.row_data)
 print("")
+
+# Set columns
+csv_object = CsvObject("Example Data.csv", set_columns=True)
+print(csv_object.column_data)
