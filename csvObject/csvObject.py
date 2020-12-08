@@ -64,6 +64,34 @@ class CsvObject:
         else:
             return f"{self.file_name}: Rows:{self.row_length}"
 
+    def __getitem__(self, item):
+        """
+        This will allow you to index a given column of data via its numeric index or the header name. Can only be called
+        if column data is set
+
+        :param item: An index of a column to Isolate or the header name
+        :type item: int | str
+
+        :return: The column data of this index
+        :rtype: list
+        """
+
+        assert self.column_data, "Get item only works if column data is set!"
+
+        if isinstance(item, int):
+            return self.column_data[item]
+        elif isinstance(item, str):
+            index = self.index_from_headers(item)
+            return self.column_data[index]
+        else:
+            raise Exception(f"Get Item takes a int or a string, where the int is a column index and the string is the"
+                            f"name of the header of the column you want to index.\nYet was passed {type(item)}")
+
+    def index_from_headers(self, item):
+        """Extract the index of a given header"""
+        assert item in set(self.headers), f"String of {item} passed but this is not in headers!\n{self.headers}"
+        return self.headers.index(item)
+
     def _extract_data(self, file_headers, encoding):
         """
         Returns a tuple of the the raw untyped row data minus the header, as well as the headers.
