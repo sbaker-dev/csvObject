@@ -34,7 +34,10 @@ python -m pip install csvObject
 The simplest use case is when the only argument to passed to the object is the path to the file. In this case the only
 thing this package is doing is creating an object that holds the filename, the headers, and the data in a row and column
 format from the csv module within python. CsvObject does have other options, detailed on the [docs page](
-https://sbaker-dev.github.io/csvObject/)
+https://sbaker-dev.github.io/csvObject/) although you may find it more useful to look at it in a interactive session 
+via the jupyter file within the Examples folder.
+
+
 ```python
 from csvObject.csvObject import CsvObject
 

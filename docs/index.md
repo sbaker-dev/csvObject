@@ -190,6 +190,31 @@ if they occur if you print csv_object.invalid you will get an empty list.
 [['Mitten', 17.5, 'Taby', 5550112, False], ['Squitten', 10.2, 'Tortoiseshell', '', True]]
 ```
 
+### Column data
+
+You may also load data in with column data as well as row data by setting set_columns to be True. This is not on by 
+default **and may be slow for very large data sets**. If you ever just print the object, then it will tell you the file
+name of the file that was loaded, as well as the column dimensions (if set), and row dimensions. 
+
+If column data has been set, you can also use indexing of the loaded object to return that column of data. The getitem 
+will allow you to pass either the index of the column, or the name of the header of that column. If you ever need the 
+index of a given header, you can also call if from index_from_headers
+
+```python
+from csvObject.csvObject import CsvObject
+csv_object = CsvObject("Example Data.csv", set_columns=True)
+print(csv_object.column_data)
+print(csv_object)
+
+header_indexing = csv_object['Owner Number']
+print(header_indexing)
+
+cat_name_index = csv_object.index_from_headers("Cat Name")
+int_indexing = csv_object[cat_name_index]
+print(int_indexing)
+```
+
+
 <!-- IF UNCLEAR -->
 ## If unclear
 
