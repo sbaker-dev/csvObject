@@ -7,6 +7,9 @@ print(f"File name is: {CsvObject('Example Data.csv').file_name}\n")
 print("# Simple Case #")
 csv_object = CsvObject("Example Data.csv")
 print(csv_object.row_data)
+
+# Show printing of object is human readable
+print(csv_object)
 print("")
 
 # Dealing with files without headers
@@ -46,3 +49,10 @@ print("")
 # Set columns
 csv_object = CsvObject("Example Data.csv", set_columns=True)
 print(csv_object.column_data)
+
+# Indexing of column data
+a = csv_object[0]
+print(a)
+
+b = csv_object['Owner Number']
+print(b)
