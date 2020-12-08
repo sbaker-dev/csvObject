@@ -57,6 +57,13 @@ class CsvObject:
             print(f"Warning: The following column-row-value-type where not correct so loaded as strings:\n"
                   f"{sorted(self.invalid_typed)}")
 
+    def __repr__(self):
+        """Add some human readable output from print"""
+        if self.column_data:
+            return f"{self.file_name}: Column:{self.column_length} by Rows:{self.row_length}"
+        else:
+            return f"{self.file_name}: Rows:{self.row_length}"
+
     def _extract_data(self, file_headers, encoding):
         """
         Returns a tuple of the the raw untyped row data minus the header, as well as the headers.
