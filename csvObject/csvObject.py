@@ -41,17 +41,20 @@ class CsvObject:
         """
 
         self.file_path = Path(csv_path)
-        self.headers, self._raw_data = self._extract_data(file_headers, encoding)
         self.file_name = self.file_path.name
-        self.column_length = len(self._raw_data)
+
+        self._file_headings = file_headers
+        self._encoding = encoding
+
+        self.headers = self._extract_headers()
         self.row_length = len(self.headers)
-        self.column_types = self._determine_column_types(column_types)
 
         self.missing_to_zero = missing_to_zero
         self.print_warnings = print_warnings
         self.invalid_typed = []
 
-        self.row_data, self.column_data = self._set_data(set_columns)
+        self.column_types = self._determine_column_types(column_types)
+        self.row_data, self.column_data, self.column_length = self._set_data(set_columns)
 
         if len(self.invalid_typed) > 0 and self.print_warnings:
             print(f"Warning: The following column-row-value-type where not correct so loaded as strings:\n"
@@ -92,32 +95,50 @@ class CsvObject:
         assert item in set(self.headers), f"String of {item} passed but this is not in headers!\n{self.headers}"
         return self.headers.index(item)
 
-    def _extract_data(self, file_headers, encoding):
+    def _extract_headers(self):
+        """
+        This will extract the headers from a given csv file if the file has headers, otherwise just Untitled
+
+        :return: A list of Headers
+        :rtype: list[str]
+        """
+
+        with open(self.file_path, "rt", encoding=self._encoding) as csv_file:
+            for row in csv.reader(csv_file):
+                if self._file_headings:
+                    return [header if header != "" else f"Untitled_{index + 1}" for index, header in enumerate(row)]
+
+                else:
+                    return [f"Untitled_{i + 1}" for i in range(len(row[0]))]
+
+    def _extract_data(self):
         """
         Returns a tuple of the the raw untyped row data minus the header, as well as the headers.
 
-        :param file_headers: If the first row should be interpreted as a file header or not
-        :type file_headers: bool
-
-        :param encoding: The encoding style of the file
-        :type encoding: str
-
         :return: A tuple of raw untyped row data minus the header, as well as the headers
         """
-        with open(self.file_path, "rt", encoding=encoding) as csv_file:
+        with open(self.file_path, "rt", encoding=self._encoding) as csv_file:
             raw_data = [row for row in csv.reader(csv_file)]
 
         # If we have read in a .txt, .tsv or .uniq file then we delimit our rows
         if self.file_path.suffix == ".txt":
             raw_data = [row[0].split() for row in raw_data if len(row) == 1]
+
         elif (self.file_path.suffix == ".tsv") or (self.file_path.suffix == ".tsv"):
             raw_data = [re.split(r"\t+", row[0]) for row in raw_data]
 
-        if file_headers:
-            headers = [header if header != "" else f"Untitled_{index + 1}" for index, header in enumerate(raw_data[0])]
-            return headers, raw_data[1:]
+        # Csv files are the default so don't need handling
+        elif self.file_path.suffix == ".csv":
+            pass
+
+        # Warning users that a file has been loaded that we haven't build a capture for
         else:
-            return [f"Untitled_{i + 1}" for i in range(len(raw_data[0]))], raw_data
+            print(f"Warning: {self.file_path.suffix} is not explicitly handled")
+
+        if self._file_headings:
+            return raw_data[1:]
+        else:
+            return raw_data
 
     def _determine_column_types(self, column_types):
         """
@@ -211,7 +232,7 @@ class CsvObject:
         """
 
         row_data = []
-        for row in self._raw_data:
+        for row in self._extract_data():
             if len(row) < self.row_length:
                 row_data.append(row + ["" for _ in range(self.row_length - len(row))])
             else:
@@ -233,9 +254,9 @@ class CsvObject:
             row_data = self._check_row_length()
 
         if set_columns:
-            return row_data, self._format_column(row_data)
+            return row_data, self._format_column(row_data), len(row_data)
         else:
-            return row_data, None
+            return row_data, None, len(row_data)
 
     @staticmethod
     def _string_to_bool(string_representation_of_bool):
