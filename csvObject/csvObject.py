@@ -41,7 +41,7 @@ class CsvObject:
         """
 
         self.file_path = Path(csv_path)
-        self.file_name = self.file_path.name
+        self.file_name = self.file_path.stem
 
         self._file_headings = file_headers
         self._encoding = encoding
