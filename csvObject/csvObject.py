@@ -56,6 +56,10 @@ class CsvObject:
         self.column_types = self._determine_column_types(column_types)
         self.row_data, self.column_data, self.column_length = self._set_data(set_columns)
 
+        # Old definitions kept for legacy, but new names added for clarity
+        self.num_cols = self.row_length
+        self.num_rows = self.column_length
+
         if len(self.invalid_typed) > 0 and self.print_warnings:
             print(f"Warning: The following column-row-value-type where not correct so loaded as strings:\n"
                   f"{sorted(self.invalid_typed)}")
