@@ -19,7 +19,7 @@ class CsvObject:
         missing_to_zero.
 
         :param csv_path: path to the load file
-        :type csv_path: str
+        :type csv_path: str | Path
 
         :key column_types: A type, list of types to type the row's data, or None if a string representation of the data
             is sufficient
